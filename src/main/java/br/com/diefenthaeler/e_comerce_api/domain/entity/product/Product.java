@@ -3,7 +3,9 @@ package br.com.diefenthaeler.e_comerce_api.domain.entity.product;
 import br.com.diefenthaeler.e_comerce_api.domain.entity.category.Category;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Product {
     private Long id;
@@ -13,13 +15,8 @@ public class Product {
     private BigDecimal price;
     private List<Category> categories;
 
-    public Product(Long id, String name, String slug, String description, BigDecimal price, List<Category> categories) {
-        this.id = id;
-        this.name = name;
-        this.slug = slug;
-        this.description = description;
-        this.price = price;
-        this.categories = categories;
+    private Product() {
+        this.categories = new ArrayList<>();
     }
 
     public Long getId() {
@@ -34,39 +31,99 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSlug() {
         return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
+    //defensive copy
     public List<Category> getCategories() {
-        return categories;
+        return new ArrayList<>(categories);
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public void addCategory(Category category) {
+        if (!categories.contains(category)) {
+            categories.add(category);
+        }
+    }
+
+    public void removeCategory(Category category) {
+        categories.remove(category);
+    }
+
+    public static class Builder {
+        private final Product product;
+
+        private Builder() {
+            product = new Product();
+        }
+
+        public Builder withName(String name) {
+            product.name = name;
+            return this;
+        }
+
+        public Builder withSlug(String slug) {
+            product.slug = slug;
+            return this;
+        }
+
+        public Builder withDescription(String description) {
+            product.description = description;
+            return this;
+        }
+
+        public Builder withPrice(BigDecimal price) {
+            product.price = price;
+            return this;
+        }
+
+        public Builder withCategories(List<Category> categories) {
+            product.categories = new ArrayList<>(categories);
+            return this;
+        }
+
+        public Product build() {
+            validateProduct();
+            return product;
+        }
+
+        private void validateProduct() {
+            if (product.name == null || product.name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Product name cannot be empty");
+            }
+
+            if (product.slug == null || product.slug.trim().isEmpty()) {
+                throw new IllegalArgumentException("Product slug cannot be empty");
+            }
+
+            if (product.price == null || product.price.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Product price must be greater than zero");
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
