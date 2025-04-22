@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Product {
-    private Long id;
+    private Integer id;
     private String name;
     private String slug;
     private String description;
@@ -19,11 +19,11 @@ public class Product {
         this.categories = new ArrayList<>();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
