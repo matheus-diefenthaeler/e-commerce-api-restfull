@@ -1,4 +1,4 @@
 package br.com.diefenthaeler.e_comerce_api.domain.service;
 
-public class OrderService {
+public interface OrderService {
 }

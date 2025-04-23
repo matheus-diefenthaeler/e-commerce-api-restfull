@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class ProductResponse {
 
-    private Long id;
+    private Integer id;
     private String name;
     private String slug;
     private String description;

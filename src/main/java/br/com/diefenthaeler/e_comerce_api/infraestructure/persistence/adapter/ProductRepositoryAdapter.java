@@ -52,8 +52,6 @@ public class ProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public List<Product> findAllAdmin(int page, int size) {
-        // Para este exemplo, a implementação é igual a findAll
-        // Em um cenário real, poderia incluir informações adicionais para admin
         return findAll(page, size);
     }
 

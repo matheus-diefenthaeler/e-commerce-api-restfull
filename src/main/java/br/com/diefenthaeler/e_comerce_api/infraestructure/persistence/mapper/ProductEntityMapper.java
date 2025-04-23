@@ -32,7 +32,6 @@ public class ProductEntityMapper {
                 .withPrice(entity.getPrice())
                 .build();
 
-        // Definir ID manualmente depois da construção
         product.setId(entity.getId());
 
         // Mapear categorias, se houver
