@@ -10,4 +10,6 @@ public interface JpaCategoryRepository extends JpaRepository<CategoryEntity, Int
     Optional<CategoryEntity> findBySlug(String slug);
 
     List<CategoryEntity> findAllByIdIn(List<Integer> ids);
+
+    boolean existsBySlug(String slug);
 }

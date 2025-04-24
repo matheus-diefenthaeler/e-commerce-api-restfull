@@ -12,4 +12,8 @@ public interface CategoryRepository {
     Optional<Category> findBySlug(String slug);
 
     List<Category> findAllByIds(List<Integer> ids);
+
+    boolean existsBySlug(String slug);
+
+    Category save(Category category);
 }

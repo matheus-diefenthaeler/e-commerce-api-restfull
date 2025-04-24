@@ -40,4 +40,16 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean existsBySlug(String slug) {
+        return jpaCategoryRepository.existsBySlug(slug);
+    }
+
+    @Override
+    public Category save(Category category) {
+        CategoryEntity entity = CategoryEntityMapper.toEntity(category);
+        CategoryEntity savedEntity = jpaCategoryRepository.save(entity);
+        return CategoryEntityMapper.toDomain(savedEntity);
+    }
+
 }

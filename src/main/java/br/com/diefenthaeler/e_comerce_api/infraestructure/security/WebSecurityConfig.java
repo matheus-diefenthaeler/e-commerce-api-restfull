@@ -15,7 +15,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Permitir acesso a endpoints específicos sem autenticação durante o desenvolvimento
-                        .requestMatchers("/api/products/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/**", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.disable()); // Necessário para o console H2
