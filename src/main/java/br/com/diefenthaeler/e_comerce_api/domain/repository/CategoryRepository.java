@@ -16,4 +16,6 @@ public interface CategoryRepository {
     boolean existsBySlug(String slug);
 
     Category save(Category category);
+
+    void deleteBySlug(String slug);
 }

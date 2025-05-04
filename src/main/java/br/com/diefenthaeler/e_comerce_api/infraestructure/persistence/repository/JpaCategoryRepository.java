@@ -12,4 +12,6 @@ public interface JpaCategoryRepository extends JpaRepository<CategoryEntity, Int
     List<CategoryEntity> findAllByIdIn(List<Integer> ids);
 
     boolean existsBySlug(String slug);
+
+    void deleteBySlug(String slug);
 }

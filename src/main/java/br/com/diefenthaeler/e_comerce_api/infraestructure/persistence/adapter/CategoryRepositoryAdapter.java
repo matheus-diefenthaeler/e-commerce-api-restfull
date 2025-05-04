@@ -5,6 +5,7 @@ import br.com.diefenthaeler.e_comerce_api.domain.repository.CategoryRepository;
 import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.entity.CategoryEntity;
 import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.mapper.CategoryEntityMapper;
 import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.repository.JpaCategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,6 +51,12 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
         CategoryEntity entity = CategoryEntityMapper.toEntity(category);
         CategoryEntity savedEntity = jpaCategoryRepository.save(entity);
         return CategoryEntityMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBySlug(String slug) {
+        jpaCategoryRepository.deleteBySlug(slug);
     }
 
 }
