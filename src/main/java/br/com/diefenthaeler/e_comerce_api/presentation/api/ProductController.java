@@ -1,6 +1,6 @@
 package br.com.diefenthaeler.e_comerce_api.presentation.api;
 
-import br.com.diefenthaeler.e_comerce_api.application.dto.request.CreateProductRequest;
+import br.com.diefenthaeler.e_comerce_api.application.dto.request.product.CreateProductRequest;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.ProductResponse;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.product.CreateProductUseCase;
 import jakarta.validation.Valid;

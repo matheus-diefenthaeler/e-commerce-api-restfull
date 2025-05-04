@@ -1,6 +1,6 @@
 package br.com.diefenthaeler.e_comerce_api.application.usecase.category.impl;
 
-import br.com.diefenthaeler.e_comerce_api.application.dto.request.CreateCategoryRequest;
+import br.com.diefenthaeler.e_comerce_api.application.dto.request.category.CreateCategoryRequest;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.CategoryResponse;
 import br.com.diefenthaeler.e_comerce_api.application.mapper.CategoryMapper;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.category.CreateCategoryUseCase;

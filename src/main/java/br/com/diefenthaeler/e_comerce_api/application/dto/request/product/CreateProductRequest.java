@@ -1,4 +1,4 @@
-package br.com.diefenthaeler.e_comerce_api.application.dto.request;
+package br.com.diefenthaeler.e_comerce_api.application.dto.request.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
