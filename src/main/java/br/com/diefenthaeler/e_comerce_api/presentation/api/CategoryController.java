@@ -4,6 +4,7 @@ import br.com.diefenthaeler.e_comerce_api.application.dto.request.CreateCategory
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.CategoryResponse;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.category.CreateCategoryUseCase;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.category.DeleteCategoryUseCase;
+import br.com.diefenthaeler.e_comerce_api.application.usecase.category.GetCategoryUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ public class CategoryController {
 
     private final CreateCategoryUseCase createCategoryUseCase;
     private final DeleteCategoryUseCase deleteCategoryUseCase;
+    private final GetCategoryUseCase getCategoryUseCase;
 
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
@@ -29,6 +31,12 @@ public class CategoryController {
         deleteCategoryUseCase.execute(slug);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable String slug){
+        CategoryResponse response = getCategoryUseCase.execute(slug);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
