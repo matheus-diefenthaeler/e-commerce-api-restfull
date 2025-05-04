@@ -1,6 +1,7 @@
 package br.com.diefenthaeler.e_comerce_api.domain.repository;
 
 import br.com.diefenthaeler.e_comerce_api.domain.entity.category.Category;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface CategoryRepository {
     Category save(Category category);
 
     void deleteBySlug(String slug);
+
+    Page<Category> findAllPaged(int page, int size);
 }

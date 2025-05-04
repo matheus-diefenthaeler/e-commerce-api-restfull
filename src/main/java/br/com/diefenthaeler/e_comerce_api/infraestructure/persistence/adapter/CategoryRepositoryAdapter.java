@@ -6,6 +6,10 @@ import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.entity.Cat
 import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.mapper.CategoryEntityMapper;
 import br.com.diefenthaeler.e_comerce_api.infraestructure.persistence.repository.JpaCategoryRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -57,6 +61,20 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
     @Transactional
     public void deleteBySlug(String slug) {
         jpaCategoryRepository.deleteBySlug(slug);
+    }
+
+    @Override
+    public Page<Category> findAllPaged(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryEntity> entityPage = jpaCategoryRepository.findAll(pageable);
+
+        return new PageImpl<>(
+                entityPage.getContent().stream()
+                        .map(CategoryEntityMapper::toDomain)
+                        .collect(Collectors.toList()),
+                pageable,
+                entityPage.getTotalElements()
+        );
     }
 
 }
