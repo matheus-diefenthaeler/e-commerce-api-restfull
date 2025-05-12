@@ -1,11 +1,15 @@
 package br.com.diefenthaeler.e_comerce_api.infraestructure.config;
 
+import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.CreateCustomerUseCase;
+import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.impl.CreateCustomerUseCaseImpl;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.product.CreateProductUseCase;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.product.impl.CreateProductUseCaseImpl;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.CategoryRepository;
+import br.com.diefenthaeler.e_comerce_api.domain.repository.CustomerRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.ProductRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class UsecaseConfig {
@@ -15,5 +19,12 @@ public class UsecaseConfig {
             ProductRepository productRepository,
             CategoryRepository categoryRepository) {
         return new CreateProductUseCaseImpl(productRepository, categoryRepository);
+    }
+
+    @Bean
+    public CreateCustomerUseCase createCustomerUseCase(
+            CustomerRepository customerRepository,
+            PasswordEncoder passwordEncoder) {
+        return new CreateCustomerUseCaseImpl(customerRepository, passwordEncoder);
     }
 }
