@@ -4,10 +4,7 @@ import br.com.diefenthaeler.e_comerce_api.application.dto.request.customer.Creat
 import br.com.diefenthaeler.e_comerce_api.application.dto.request.customer.UpdateCustomerRequest;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.CustomerResponse;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.common.PagedResponse;
-import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.CreateCustomerUseCase;
-import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.GetCustomerByIdUseCase;
-import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.ListCustomersUseCase;
-import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.UpdateCustomerUseCase;
+import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +20,7 @@ public class CustomerController {
     private final GetCustomerByIdUseCase getCustomerByIdUseCase;
     private final ListCustomersUseCase listCustomersUseCase;
     private final UpdateCustomerUseCase updateCustomerUseCase;
+    private final DeleteCustomerUseCase deleteCustomerUseCase;
 
     @PostMapping
     public ResponseEntity<CustomerResponse> createCustomer(@Valid @RequestBody CreateCustomerRequest request) {
@@ -50,5 +48,11 @@ public class CustomerController {
             @Valid @RequestBody UpdateCustomerRequest request) {
         CustomerResponse response = updateCustomerUseCase.execute(id, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        deleteCustomerUseCase.execute(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
