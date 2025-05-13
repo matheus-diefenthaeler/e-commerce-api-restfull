@@ -1,11 +1,13 @@
 package br.com.diefenthaeler.e_comerce_api.presentation.api;
 
 import br.com.diefenthaeler.e_comerce_api.application.dto.request.customer.CreateCustomerRequest;
+import br.com.diefenthaeler.e_comerce_api.application.dto.request.customer.UpdateCustomerRequest;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.CustomerResponse;
 import br.com.diefenthaeler.e_comerce_api.application.dto.response.common.PagedResponse;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.CreateCustomerUseCase;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.GetCustomerByIdUseCase;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.ListCustomersUseCase;
+import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.UpdateCustomerUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ public class CustomerController {
     private final CreateCustomerUseCase createCustomerUseCase;
     private final GetCustomerByIdUseCase getCustomerByIdUseCase;
     private final ListCustomersUseCase listCustomersUseCase;
+    private final UpdateCustomerUseCase updateCustomerUseCase;
 
     @PostMapping
     public ResponseEntity<CustomerResponse> createCustomer(@Valid @RequestBody CreateCustomerRequest request) {
@@ -38,6 +41,14 @@ public class CustomerController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         PagedResponse<CustomerResponse> response = listCustomersUseCase.execute(page, size);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerResponse> updateCustomer(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateCustomerRequest request) {
+        CustomerResponse response = updateCustomerUseCase.execute(id, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
