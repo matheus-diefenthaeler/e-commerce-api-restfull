@@ -79,13 +79,13 @@ INSERT INTO payments (id, amount, payment_date, order_id, method, status) VALUES
 (3, 14496, CURRENT_TIMESTAMP - 9, 3, 'CREDIT_CARD', 'PAID'),           -- Payment for Order 3
 (4, 7999, CURRENT_TIMESTAMP - 4, 4, 'CREDIT_CARD', 'ERROR');           -- Payment for Order 4 (cancelled)
 
--- Insert Carts
-INSERT INTO carts (id, uuid, customer_id, created_at) VALUES
-(1, 'cart-uuid-1', 2, CURRENT_TIMESTAMP - 2),
-(2, 'cart-uuid-2', 3, CURRENT_TIMESTAMP - 1);
-
--- Insert Cart Items
-INSERT INTO cart_items (id, quantity, cart_id, product_id) VALUES
-(1, 1, 1, 5),  -- Jane's cart: Jeans
-(2, 1, 1, 6),  -- Jane's cart: Novel
-(3, 2, 2, 10); -- Mike's cart: Two Yoga Mats
+---- Insert Carts
+--INSERT INTO carts (id, uuid, customer_id, created_at) VALUES
+--(1, 'cart-uuid-1', 2, CURRENT_TIMESTAMP - 2),
+--(2, 'cart-uuid-2', 3, CURRENT_TIMESTAMP - 1);
+--
+---- Insert Cart Items
+--INSERT INTO cart_items (id, quantity, cart_id, product_id) VALUES
+--(1, 1, 1, 5),  -- Jane's cart: Jeans
+--(2, 1, 1, 6),  -- Jane's cart: Novel
+--(3, 2, 2, 10); -- Mike's cart: Two Yoga Mats

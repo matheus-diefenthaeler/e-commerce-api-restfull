@@ -35,57 +35,13 @@ public class AddCartItemUseCaseImpl implements AddCartItemUseCase {
     @Transactional
     public CartResponse execute(AddCartItemRequest request, Long customerId) {
         // 1. Get the product
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ProductException.ProductNotFoundException(
-                        "Product with id '" + request.getProductId() + "' not found"));
+        Product product = findProductById(request.getProductId());
 
         // 2. Get or create the cart
-        Cart cart;
+        Cart cart = findOrCreateCart(request.getCartUuid(), customerId);
 
-        if (request.getCartUuid() != null && !request.getCartUuid().isEmpty()) {
-            // If cartUuid is provided, try to find that cart
-            cart = cartRepository.findByUuid(request.getCartUuid())
-                    .orElseThrow(() -> new CartException.CartNotFoundException(
-                            "Cart with UUID '" + request.getCartUuid() + "' not found"));
-        } else if (customerId != null) {
-            // If authenticated user, get or create a cart for the customer
-            Customer customer = customerRepository.findById(customerId)
-                    .orElseThrow(() -> new CustomerException.CustomerNotFoundException(
-                            "Customer with id '" + customerId + "' not found"));
-
-            // Try to find an existing cart for the customer
-            Optional<Cart> existingCart = cartRepository.findByCustomerId(customerId);
-
-            if (existingCart.isPresent()) {
-                cart = existingCart.get();
-            } else {
-                // Create a new cart for the customer
-                cart = createNewCart(customer);
-            }
-        } else {
-            // Anonymous cart - create a new one with no customer
-            cart = createNewCart(null);
-        }
-
-        // 3. Check if the product already exists in the cart
-        Optional<CartItem> existingCartItem = cart.getItems().stream()
-                .filter(item -> item.getProduct().getId().equals(request.getProductId()))
-                .findFirst();
-
-        if (existingCartItem.isPresent()) {
-            // Update the quantity of the existing item
-            CartItem item = existingCartItem.get();
-            item.setQuantity(item.getQuantity() + request.getQuantity());
-        } else {
-            // Add a new item to the cart
-            CartItem newItem = new CartItem(
-                    null,
-                    request.getQuantity(),
-                    product,
-                    cart
-            );
-            cart.getItems().add(newItem);
-        }
+        // 3. Add or update product in cart
+        addOrUpdateProductInCart(cart, product, request.getQuantity());
 
         // 4. Save the updated cart
         Cart savedCart = cartRepository.save(cart);
@@ -94,15 +50,88 @@ public class AddCartItemUseCaseImpl implements AddCartItemUseCase {
         return CartMapper.toResponse(savedCart);
     }
 
-    private Cart createNewCart(Customer customer) {
-        String uuid = UUID.randomUUID().toString();
-        Cart cart = new Cart(
-                null,
-                uuid,
-                new ArrayList<>(),
-                customer,
-                new Date()
-        );
+    private Product findProductById(Integer productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException.ProductNotFoundException(
+                        "Product with id '" + productId + "' not found"));
+    }
+
+    private Cart findOrCreateCart(String cartUuid, Long customerId) {
+        // Case 1: Cart UUID is provided - find by UUID
+        if (cartUuid != null && !cartUuid.isEmpty()) {
+            return findCartByUuid(cartUuid);
+        }
+
+        // Case 2: Customer is authenticated - find or create customer cart
+        if (customerId != null) {
+            return findOrCreateCustomerCart(customerId);
+        }
+
+        // Case 3: Anonymous cart - create a new one
+        return createAnonymousCart();
+    }
+
+    private Cart findCartByUuid(String cartUuid) {
+        return cartRepository.findByUuid(cartUuid)
+                .orElseThrow(() -> new CartException.CartNotFoundException(
+                        "Cart with UUID '" + cartUuid + "' not found"));
+    }
+
+    private Cart findOrCreateCustomerCart(Long customerId) {
+        Customer customer = findCustomerById(customerId);
+
+        return cartRepository.findByCustomerId(customerId)
+                .orElseGet(() -> createCartForCustomer(customer));
+    }
+
+    private Customer findCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerException.CustomerNotFoundException(
+                        "Customer with id '" + customerId + "' not found"));
+    }
+
+    private Cart createCartForCustomer(Customer customer) {
+        String uuid = generateCartUuid();
+        Date createdAt = new Date();
+
+        Cart cart = new Cart(null, uuid, new ArrayList<>(), customer, createdAt);
         return cartRepository.save(cart);
+    }
+
+    private Cart createAnonymousCart() {
+        String uuid = generateCartUuid();
+        Date createdAt = new Date();
+
+        Cart cart = new Cart(null, uuid, new ArrayList<>(), null, createdAt);
+        return cartRepository.save(cart);
+    }
+
+    private void addOrUpdateProductInCart(Cart cart, Product product, Long quantity) {
+        Optional<CartItem> existingItem = findCartItemByProduct(cart, product.getId());
+
+        if (existingItem.isPresent()) {
+            updateCartItemQuantity(existingItem.get(), quantity);
+        } else {
+            addNewCartItem(cart, product, quantity);
+        }
+    }
+
+    private Optional<CartItem> findCartItemByProduct(Cart cart, Integer productId) {
+        return cart.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
+    }
+
+    private void updateCartItemQuantity(CartItem item, Long additionalQuantity) {
+        item.setQuantity(item.getQuantity() + additionalQuantity);
+    }
+
+    private void addNewCartItem(Cart cart, Product product, Long quantity) {
+        CartItem newItem = new CartItem(null, quantity, product, cart);
+        cart.getItems().add(newItem);
+    }
+
+    private String generateCartUuid() {
+        return UUID.randomUUID().toString();
     }
 }
