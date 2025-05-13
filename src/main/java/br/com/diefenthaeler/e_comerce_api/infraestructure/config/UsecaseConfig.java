@@ -7,6 +7,8 @@ import br.com.diefenthaeler.e_comerce_api.application.usecase.product.impl.Creat
 import br.com.diefenthaeler.e_comerce_api.domain.repository.CategoryRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.CustomerRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.ProductRepository;
+import br.com.diefenthaeler.e_comerce_api.domain.service.CartService;
+import br.com.diefenthaeler.e_comerce_api.domain.service.impl.CartServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,5 +34,10 @@ public class UsecaseConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CartService cartService() {
+        return new CartServiceImpl();
     }
 }
