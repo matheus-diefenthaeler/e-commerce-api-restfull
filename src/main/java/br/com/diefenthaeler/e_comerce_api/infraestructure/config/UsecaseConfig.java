@@ -4,6 +4,7 @@ import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.CreateCus
 import br.com.diefenthaeler.e_comerce_api.application.usecase.customer.impl.CreateCustomerUseCaseImpl;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.product.CreateProductUseCase;
 import br.com.diefenthaeler.e_comerce_api.application.usecase.product.impl.CreateProductUseCaseImpl;
+import br.com.diefenthaeler.e_comerce_api.domain.repository.CartRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.CategoryRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.CustomerRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.repository.ProductRepository;
@@ -37,7 +38,7 @@ public class UsecaseConfig {
     }
 
     @Bean
-    public CartService cartService() {
-        return new CartServiceImpl();
+    public CartService cartService(CartRepository cartRepository) {
+        return new CartServiceImpl(cartRepository);
     }
 }

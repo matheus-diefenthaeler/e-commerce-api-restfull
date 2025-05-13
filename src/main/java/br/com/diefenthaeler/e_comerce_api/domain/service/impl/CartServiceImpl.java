@@ -4,6 +4,7 @@ import br.com.diefenthaeler.e_comerce_api.domain.entity.cart.Cart;
 import br.com.diefenthaeler.e_comerce_api.domain.entity.cart.CartItem;
 import br.com.diefenthaeler.e_comerce_api.domain.entity.customer.Customer;
 import br.com.diefenthaeler.e_comerce_api.domain.entity.product.Product;
+import br.com.diefenthaeler.e_comerce_api.domain.repository.CartRepository;
 import br.com.diefenthaeler.e_comerce_api.domain.service.CartService;
 
 import java.util.ArrayList;
@@ -12,6 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CartServiceImpl implements CartService {
+
+    private final CartRepository cartRepository;
+
+    public CartServiceImpl(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
 
     @Override
     public Cart addItemToCart(Cart cart, Product product, Long quantity) {
@@ -60,5 +67,10 @@ public class CartServiceImpl implements CartService {
 
     private String generateCartUuid() {
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean cartItemExists(Long cartItemId) {
+        return cartRepository.existsCartItemById(cartItemId);
     }
 }

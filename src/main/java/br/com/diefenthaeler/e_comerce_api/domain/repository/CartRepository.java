@@ -15,4 +15,6 @@ public interface CartRepository {
     void deleteByUuid(String uuid);
 
     void deleteCartItem(Long cartItemId);
+
+    boolean existsCartItemById(Long cartItemId);
 }

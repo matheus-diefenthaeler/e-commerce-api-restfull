@@ -16,4 +16,6 @@ public interface CartService {
     Cart createAnonymousCart();
 
     Optional<CartItem> findCartItemByProduct(Cart cart, Integer productId);
+
+    boolean cartItemExists(Long cartItemId);
 }

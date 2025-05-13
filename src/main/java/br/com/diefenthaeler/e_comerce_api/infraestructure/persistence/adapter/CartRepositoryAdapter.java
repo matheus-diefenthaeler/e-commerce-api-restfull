@@ -50,4 +50,9 @@ public class CartRepositoryAdapter implements CartRepository {
     public void deleteCartItem(Long cartItemId) {
         jpaCartItemRepository.deleteById(cartItemId);
     }
+
+    @Override
+    public boolean existsCartItemById(Long cartItemId) {
+        return jpaCartItemRepository.existsById(cartItemId);
+    }
 }
